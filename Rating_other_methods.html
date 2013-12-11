@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset=utf-8>
+		<title>(Это title) Пример страницы на HTML5</title>
+		<style type="text/css">
+			.vcard {
+				display: none;
+			}
+			#star1:checked ~ span > span > label, 
+			#star2:checked ~ span span:nth-of-type(-n+1) > label, 
+			#star3:checked ~ span span:nth-of-type(-n+2) > label, 
+			#star4:checked ~ span span:nth-of-type(-n+3) > label, 
+			#star5:checked ~ span span:nth-of-type(-n+4) > label
+			{
+				color: red;
+			}
+			span:hover> label {
+				color: red;
+			}
+			section div {
+				display: inline-block;
+			}
+			span {
+				color: yellow;
+				font-size: 20pt;
+			}
+			input {
+				appearance: none;
+				-webkit-appearance: none;
+				-moz-appearance: none;
+				padding: 0;
+				margin: 0;
+			}
+			section, h1 {
+				text-align: center;
+				padding-top: 5em;
+			}
+			section span {
+				background-color: #DDDDDD
+
+				;
+			}
+
+		</style>
+	</head>
+	<body>
+		<header>
+			<h1>Rating with aditional DOM elements</h1>
+		</header>
+		<section>
+				<input id="star1" type="radio" name="stars"> 
+				<input id="star2" type="radio" name="stars"> 
+				<input id="star3" type="radio" name="stars"> 
+				<input id="star4" type="radio" name="stars"> 
+				<input id="star5" type="radio" name="stars"> 
+				<span>
+				<span class="s1">
+					<label for="star1">&#9733;</label>
+					<span class="s2">
+						<label for="star2">&#9733;</label>
+						<span></span>
+						<span class="s123">
+							<label for="star3">&#9733;</label>
+							<span></span><span></span>
+							<span class="s1234">
+								<label for="star4">&#9733;</label>
+								<span></span><span></span><span></span>
+								<span class="s12345">
+									<label for="star5">&#9733;</label>
+								</span>
+							</span>
+						</span>
+					</span>
+				</span>
+				</span>	
+					
+				
+		</section>
+		<footer>
+		    <div class="vcard sign">
+			<span class="title">Автор</span>:
+			<span class="fn nickname">Фурсенко Александр</span>
+			(<span class="email">syngularity@yandex.ua</span>)
+		</footer>
+	</body>
+</html>

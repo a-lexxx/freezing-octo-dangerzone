@@ -160,15 +160,21 @@
 						placeholder="Алиса" size="20"/>
 				</label>
 				<ul>
-					<li><input type="radio" name="AliseType" value="LookingGlass" />в Зазеркалье</li>
-					<li><input type="radio" name="AliseType" value="Wanderland" />в Стране чудес</li>
+					<li>
+						<input id="LookingGlassRadio" type="radio" name="AliseType" value="LookingGlass" />
+						<label for="LookingGlassRadio">в Зазеркалье</label>
+					</li> 
+					<li>
+						<input id="WanderlandRadio" type="radio" name="AliseType" value="Wanderland" />
+						<label for="WanderlandRadio">в Стране чудес</label>
+					</li>
 				</ul>
 				<textarea name="Comment" placeholder="Комментарий" 
 						spellcheck="true" required="required" ></textarea>
-				<p>
-					<input type="checkbox" checked="checked" name="Subscription" value="true"/>
-					подписаться на новые комментарии
-				</p>
+				<div>
+					<input id="subscripter" type="checkbox" checked="checked" name="Subscription" value="true"/>
+					<label for="subscripter">подписаться на новые комментарии</label>
+				</div>
 				<button type="submit">Отправить</button>
 		</form>
 
