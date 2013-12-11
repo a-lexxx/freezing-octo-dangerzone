@@ -4,35 +4,35 @@
 		<meta charset="utf-8"/>
 		<style type="text/css">
 			body {
-				padding: 3em;
-				quotes: '«' '»';
-				min-width: 815px;
-				font-size: 14pt;
+				padding: 3em; 		/* отступы с краёв страницы */
+				quotes: '«' '»'; 	/* кавычки которые будут вставляться динамически в страницу */
+				min-width: 815px; 	/* всему есть предел */
+				font-size: 14pt;	/* размер текста по умолчанию */
 			} 
 			cite {
-				font-style: normal;
+				font-style: normal;	/* по умолчанию для "источников" шрифт наклонный, а нужен обычный */
 			}
 			cite:before {
-				content: open-quote;
+				content: open-quote; /* вставляем кавычки до и после "источников" */
 			}
 			cite:after {
 				content: close-quote;
 			}
-			header dl, header dt, header dd {
+			header dl, header dt, header dd {  /* определение вики в одну строку */
 				display: inline;
 				margin: 0px;
 			}
-			#characters table {
+			#characters table {		/* границы для таблиц */
 				border: 1px outset buttonface;
 				border-style: 
 			}
 			#characters td, #characters th {
 				border: 2px inset buttonface;
 			}
-			#CommentForm > ul > li {
+			#CommentForm > ul > li { 	/* список чекбоксов в форме без маркеров */
 				list-style: none;
 			}
-			#CommentForm button {
+			#CommentForm button {		/* оформление кнопки и других элементов формы */
 				border-radius: 7px;
 				background-color: #FEFEFE;
 				background: linear-gradient(to top, #FEFEFE, #E0E0E0, #FEFEFE);
@@ -43,7 +43,10 @@
 				margin: 0;
 			}
 			#CommentForm input[name="UserName"] {
-				border: 3px double buttonface;
+				border: 3px double #999;
+				width: 20em; /* Workaround for chrome.
+				It seems it can't use "size" attribute correctly 
+				and shows width of input 668552px */
 			}
 		</style>
 	</head>
@@ -155,10 +158,10 @@
 			</section>			
 		</article>
 		<form id="CommentForm" name="CommentForm">
-				<label>Имя 
-					<input name="UserName" required="required" type="text" maxlength="15" 
-						placeholder="Алиса" size="20"/>
-				</label>
+				<label>Имя</label>
+					<input name="UserName" required="required" type="text" size="20" 
+						placeholder="Алиса" maxlength="15"/>
+				
 				<ul>
 					<li>
 						<input id="LookingGlassRadio" type="radio" name="AliseType" value="LookingGlass" />

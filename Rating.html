@@ -1,12 +1,17 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset=utf-8>
-		<title>(Это title) Пример страницы на HTML5</title>
+		<title>Rating with attribute selectors</title>
 		<style type="text/css">
 			.vcard {
 				display: none;
 			}
+			/* набор стилей для фиксации рейтинга после клика пользователя, 
+			 один селектор для каждого checkbox 
+			 Установленный checkbox подсвечивает только те label, класс обёртки которых
+			 содержит соответствующий номер
+			 */
 			#star1:checked ~ span span[class*="1"] > label,  
 			#star2:checked ~ span span[class*="2"] > label, 
 			#star3:checked ~ span span[class*="3"] > label,
@@ -15,20 +20,26 @@
 			{
 				color: red;
 			}
+
+			/* стиль меток при движении мыши по рейтингу */
 			span:hover> label {
 				color: red;
 			}
-			section div {
-				display: inline-block;
+			/* анимация для красоты */
+			label {
+				transition: color 0.5s ease-out;
 			}
+			/*  стиль меток по умолчанию */
 			span {
 				color: yellow;
 				font-size: 20pt;
 			}
+			/* стиль для checkbox'а скрывающий сам checkbox */
 			input {
-				appearance: none;
+				appearance: none; /* не до конца поддерживаемые стили для скрытия checkbox */
 				-webkit-appearance: none;
 				-moz-appearance: none;
+				display: none; /* workaround for all browsers */
 				padding: 0;
 				margin: 0;
 			}
@@ -36,6 +47,7 @@
 				padding-top: 5em;
 				text-align: center;
 			}
+			/* визуальное выделение строки рейтинга */
 			section > span {
 				background-color: #CCCCFF;
 			}
