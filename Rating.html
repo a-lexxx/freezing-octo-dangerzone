@@ -7,49 +7,47 @@
 			.vcard {
 				display: none;
 			}
-			/* набор стилей для фиксации рейтинга после клика пользователя, 
-			 один селектор для каждого checkbox 
-			 Установленный checkbox подсвечивает только те label, класс обёртки которых
-			 содержит соответствующий номер
-			 */
-			#star1:checked ~ span span[class*="1"] > label,  
-			#star2:checked ~ span span[class*="2"] > label, 
-			#star3:checked ~ span span[class*="3"] > label,
-			#star4:checked ~ span span[class*="4"] > label, 
-			#star5:checked ~ span span[class*="5"] > label
-			{
-				color: red;
-			}
-
-			/* стиль меток при движении мыши по рейтингу */
-			span:hover> label {
-				color: red;
-			}
-			/* анимация для красоты */
-			label {
-				transition: color 0.5s ease-out;
-			}
-			/*  стиль меток по умолчанию */
-			span {
-				color: yellow;
-				font-size: 20pt;
-			}
-			/* стиль для checkbox'а скрывающий сам checkbox */
-			input {
-				appearance: none; /* не до конца поддерживаемые стили для скрытия checkbox */
-				-webkit-appearance: none;
-				-moz-appearance: none;
-				display: none; /* workaround for all browsers */
-				padding: 0;
-				margin: 0;
-			}
 			section, h1 {
 				padding-top: 5em;
 				text-align: center;
 			}
-			/* визуальное выделение строки рейтинга */
-			section > span {
+			/* стиль звёзд по умолчанию
+			 */
+			.rstar
+			 {
+				color:yellow;
+				display: block;				/* располагаем звёзды в обратном порядке */
+				float:right;				/* справа налево */
+				margin-right: 4px;
+				transition: color 0.5s ease-out;   /* анимация для красоты */
+			}
+
+			/* Звёзды отмечаются 
+				* при наведении курсора,
+				* если они расположены за подсвеченной звездой(расположение звёзд справа налево)
+				* если они расположены за отмеченным radio button
+				*/
+			.rstar:hover, .rstar:hover ~ .rstar, .rinput:checked ~ .rstar {
+				color:red;
+			}
+			
+			
+            /* стиль для checkbox'а скрывающий сам checkbox */
+            input.rinput {
+                    appearance: none; /* не до конца поддерживаемые стили для скрытия checkbox */
+                    -webkit-appearance: none;
+                    -moz-appearance: none;
+                    display: none; /* workaround for all browsers */
+                    padding: 0;
+                    margin: 0;
+            }
+
+			div.rating {
+				display: inline-block;
+				overflow: hidden;
+				font-size: 20pt;
 				background-color: #CCCCFF;
+		
 			}
 
 		</style>
@@ -59,28 +57,19 @@
 			<h1>Rating with attribute selectors</h1>
 		</header>
 		<section>
-				<input id="star1" type="radio" name="stars"> 
-				<input id="star2" type="radio" name="stars"> 
-				<input id="star3" type="radio" name="stars"> 
-				<input id="star4" type="radio" name="stars"> 
-				<input id="star5" type="radio" name="stars"> 
-				<span>
-				<span class="s12345">
-					<label for="star1">&#9733;</label>
-					<span class="s2345">
-						<label for="star2">&#9733;</label>
-						<span class="s345">
-							<label for="star3">&#9733;</label>
-							<span class="s45">
-								<label for="star4">&#9733;</label>
-								<span class="s5">
-									<label for="star5">&#9733;</label>
-								</span>
-							</span>
-						</span>
-					</span>
-				</span>
-				</span>	
+			<div class="rating">
+		        <input type="radio" name="rating" class="rinput" id="rinput5" value="5" />
+		        	<label for="rinput5" class="rstar">&#9733;</label>
+		        <input type="radio" name="rating" class="rinput" id="rinput4" value="4"/>
+		        	<label for="rinput4" class="rstar">&#9733;</label>
+		        <input type="radio" name="rating" class="rinput" id="rinput3" value="3" />
+		        	<label for="rinput3" class="rstar">&#9733;</label>
+		        <input type="radio" name="rating" class="rinput" id="rinput2" value="2" />
+		        	<label for="rinput2" class="rstar">&#9733;</label>
+		        <input type="radio" name="rating" class="rinput" id="rinput1" value="1" />
+		        	<label for="rinput1" class="rstar">&#9733;</label>
+		        
+		    </div>
 					
 				
 		</section>
