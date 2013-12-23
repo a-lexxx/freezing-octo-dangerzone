@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset=utf-8>
+		<title>Rating with attribute selectors</title>
+		
+		<script type="text/javascript">
+			/* функция для расчёта геометрической прогрессии (рекурсивная)
+			 * q, b, n - множитель, первый элемент и количество шагов прогрессии
+			 * P, S - произведение и сумма элементов прогрессии
+			 * возвращет объект с последним элементом, суммой и произведением прогрессии
+			 * */
+			function CalculateGeometricProgression(q, b, n, P, S) {
+				if (n<=0) return {'Bn':b, 'P':P, 'S':S };
+				return CalculateGeometricProgression(q, b*q, n-1, P*b*q, S+b);
+			}
+
+			/* функция для расчёта чисел Фибоначчи
+			 * f1, f2 - два предыдущих числа Фибоначчи
+			 * n - номер текущего числа 
+			 * возвращет значение числа
+			 * */
+			function CalculateFibonacci(f1, f2, n) {
+				if (n<=1) return f2;
+				return CalculateFibonacci(f2, f1+f2, n-1);
+			}
+
+			/* функция для быстрой сортировки массива чисел
+			 * C-style реализация
+			 * lelf, right - левая и правая граница массива
+			 * возвращет сортированный массив
+			 * */
+			function QuickSort(ar, left, right) {
+				var n = right - left + 1;
+				var middle = left + Math.floor(n/2);
+				var base = ar[middle];
+				var l = left;
+				var r = right;
+				while (l<=r) {
+					while (ar[l]<base) l++;
+					while (ar[r]>base) r--;
+					if (l<=r) {
+						var t = ar[l];
+						ar[l] = ar[r];
+						ar[r] = t;
+						l++;
+						r--;
+					}
+				}
+				if (left<r)
+					QuickSort(ar, left, r);
+				if (l<right)
+					QuickSort(ar, l, right);
+			}
+
+			function GenRandomArray(n) {
+				if (n<=0) n=1;
+				var ar = [];
+				var min = (n<10) ? 10 : n ;
+				for (var i=0; i<n; i++) {
+					ar[i] = Math.floor(Math.random() * min);
+				}
+				return ar;
+			}
+
+			function GetValue(id) {
+				var e = document.getElementById(id);
+				return e ? (+e.value) : 0;
+			}
+
+			function WriteResultsGeometricProgression(){
+				var b = GetValue("gp_bvalue");
+				var q = GetValue("gp_ratio");
+				var n = GetValue("gp_steps");
+				if (isNaN(b) || isNaN(n) || isNaN(q)) {
+					alert("Input values is not a number!");
+					return;
+				}
+				var elem_b = document.getElementById("gp_B");
+				var elem_P = document.getElementById("gp_P");
+				var elem_S = document.getElementById("gp_S");
+				if (elem_b && elem_P) {
+					var r = CalculateGeometricProgression(q, b, n, 1.0, 0.0);
+					if (!elem_P.childNodes.length) {
+						elem_P.appendChild(document.createTextNode(''));
+						elem_b.appendChild(document.createTextNode(''));
+						elem_S.appendChild(document.createTextNode(''));
+					}
+					elem_b.childNodes[0].nodeValue=r.Bn;
+					elem_P.childNodes[0].nodeValue=r.P;
+					elem_S.childNodes[0].nodeValue=r.S;
+				}
+			}
+
+			function WriteResultsFibonacci(){
+				var n = GetValue("fib_steps");
+				if ( isNaN(n) ) {
+					//alert("Input values is not a number!");
+					return;
+				}
+				var elem_fibnumber = document.getElementById("fib_number");
+				var elem_fibresult = document.getElementById("fib_result");
+				if (elem_fibnumber && elem_fibresult) {
+					var r = CalculateFibonacci(1, 1, n);
+					if (!elem_fibresult.childNodes.length) {
+						elem_fibresult.appendChild(document.createTextNode(''));
+					}
+					elem_fibresult.childNodes[0].nodeValue=r;
+					elem_fibnumber.childNodes[0].nodeValue=n;
+				}
+			}
+
+			function WriteResultsQuickSort(){
+				var n = GetValue("array_size");
+				if ( isNaN(n) ) {
+					alert("Input values is not a number!");
+					return;
+				}
+				var elem_qsarray = document.getElementById("qs_array");
+				var elem_qsresult = document.getElementById("qs_result");
+				if (elem_qsarray && elem_qsresult) {
+					var a = GenRandomArray(n);
+					if (!elem_qsarray.childNodes.length) {
+						elem_qsarray.appendChild(document.createTextNode(''));
+						elem_qsresult.appendChild(document.createTextNode(''));
+					}
+					elem_qsarray.childNodes[0].nodeValue=a.toString();
+					QuickSort(a, 0, a.length-1);
+					elem_qsresult.childNodes[0].nodeValue=a.toString();
+				}
+			}
+		</script>
+
+		<style type="text/css">
+			.vcard {
+				display: none;
+			}
+			body {
+				font-size: 12pt;
+				min-width: 600px;
+				padding: 1em;
+			}
+
+			section {
+				border: 2px #ccc dotted;
+				padding: 1em 2em;
+				position: relative;
+				margin-bottom: 2em;
+				background-color: #EEF;
+			}
+
+			section h2 {
+				background-color: white;
+				border: 2px #ccc dotted;
+				border-radius: 1em;
+				position: absolute;
+				top: -0.6em;
+				padding: 0 0.5em;
+				margin: 0;
+			}
+
+			.inputValues, .outputValues {
+				display: inline-block;
+			}
+
+			.GeometricProgression .inputValues input[type="text"] {
+			
+			}
+
+			.GeometricProgression .inputValues label {
+				display: inline-block;
+				width: 2em;
+			}
+
+			.GeometricProgression [type="button"] {
+				font-size: 3.0em;
+				width: 1.5em;
+				padding-bottom: 0.15em;
+				vertical-align: top;
+			}
+			.outputValues {
+				margin-left: 1em;
+			}
+			.outputValues > div {
+				vertical-align: top;
+				margin-bottom: 5px;
+			}
+			#qs_array, #qs_result {
+				word-break: break-all;
+			}
+
+		</style>
+	</head>
+	<body>
+		<header>
+			<h1>JS coding laboratory: operators and expressions</h1>
+		</header>
+		<section class="GeometricProgression">
+			<h2>Geometric progression</h2>
+			<span>B<sub>n+1</sub> = B<sub>n</sub> * Q</span><br>
+			<span>P = B<sub>1</sub> * B<sub>2</sub> * B<sub>3</sub> * ... * B<sub>n</sub></span><br>
+			<span>S = B<sub>1</sub> + B<sub>2</sub> + B<sub>3</sub> + ... + B<sub>n</sub></span><br>
+			<div class="inputValues">
+	        	<label for="gp_qvalue">B<sub>1</sub>=</label>
+		        <input type="text" id="gp_bvalue" value="0.5" /><br>
+		        <label for="gp_ratio">Q = </label>
+		        <input type="text" id="gp_ratio" value="-0.5"/><br>
+		        <span><label for="gp_steps">n = </label>
+		        <input type="text" id="gp_steps" value="15"/><br>
+			</div>
+			<input type="button" value="}" onclick="WriteResultsGeometricProgression()">
+			<div class="outputValues">
+				<div>B<sub>n</sub> = <span id="gp_B"></span></div>
+				<div>P = <span id="gp_P"></span></div>
+				<div>S = <span id="gp_S"></span></div>
+			</div>					
+		</section>
+
+		<section class="Fibonacci">
+			<h2>Fibonacci</h2>
+			<span>F<sub>n+1</sub> = F<sub>n-1</sub> + F<sub>n</sub></span><br>
+			<span>F<sub>0</sub> = 1</span><br>
+			<span>F<sub>1</sub> = 1</span><br>
+			<div class="inputValues">
+	        	<span><label for="fib_steps">n = </label>
+		        <input type="text" id="fib_steps" placeholder="Введите номер числа"
+		         onchange="WriteResultsFibonacci()" onkeyup="WriteResultsFibonacci()"
+		         /><br>
+			</div>
+			<!-- <input type="button" value="Посчитать" onclick="WriteResultsFibonacci()"> -->
+			<div class="outputValues">
+				<div>F<sub id="fib_number">n</sub> = <span id="fib_result"></span></div>
+			</div>	
+		</section>
+		<section class="QuickSort">
+			<h2>QuickSort</h2>
+			<span>Рекурсивный алгоритм быстрой сортировки массива<br>
+			Значения массива генерируются случайно</span><br>
+			<div class="inputValues">
+	        	<span><label for="array_size">n = </label>
+		        <input type="text" id="array_size" placeholder="Введите размер массива"/><br>
+			</div>
+			<input type="button" value="Генерировать" onclick="WriteResultsQuickSort()"> 
+			<div>Input array = <span id="qs_array"></span></div>
+			<div>Sorted array = <span id="qs_result"></span></div>
+			
+		</section>
+		<footer>
+		    <div class="vcard sign">
+				<span class="title">Автор</span>:
+				<span class="fn nickname">Фурсенко Александр</span>
+				(<span class="email">syngularity@yandex.ua</span>)
+			</div>
+		</footer>
+	</body>
+</html>
