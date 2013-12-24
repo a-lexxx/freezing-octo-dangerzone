@@ -53,6 +53,15 @@
 					QuickSort(ar, l, right);
 			}
 
+
+			/*
+			* * * * * * * всякие вспомогательные функции * * * * * * * * 
+			*/
+
+
+			/*
+			 * функция для генерации массива случайных чисел заданного размера
+			 * */
 			function GenRandomArray(n) {
 				if (n<=0) n=1;
 				var ar = [];
@@ -63,45 +72,55 @@
 				return ar;
 			}
 
+			/*
+			 *	функция для получения значения поля объекта
+			 *	и перевода эначения в число
+			 * */
 			function GetValue(id) {
 				var e = document.getElementById(id);
 				return e ? (+e.value) : 0;
 			}
 
+			/*
+			 * функция для записи результатов расчёта геометрической прогресси на страницу
+			 * */
 			function WriteResultsGeometricProgression(){
-				var b = GetValue("gp_bvalue");
+				var b = GetValue("gp_bvalue");				// считываем входные параметры
 				var q = GetValue("gp_ratio");
 				var n = GetValue("gp_steps");
-				if (isNaN(b) || isNaN(n) || isNaN(q)) {
+				if (isNaN(b) || isNaN(n) || isNaN(q)) {		// если они распарсились верно
 					alert("Input values is not a number!");
 					return;
 				}
-				var elem_b = document.getElementById("gp_B");
-				var elem_P = document.getElementById("gp_P");
+				var elem_b = document.getElementById("gp_B");	// находим элементы для 
+				var elem_P = document.getElementById("gp_P");	// вывода результатов
 				var elem_S = document.getElementById("gp_S");
 				if (elem_b && elem_P) {
-					var r = CalculateGeometricProgression(q, b, n, 1.0, 0.0);
-					if (!elem_P.childNodes.length) {
-						elem_P.appendChild(document.createTextNode(''));
+					var r = CalculateGeometricProgression(q, b, n, 1.0, 0.0);	// считаем
+					if (!elem_P.childNodes.length) {			// если в них не было текста
+						elem_P.appendChild(document.createTextNode('')); // добавляем текстовые ноды
 						elem_b.appendChild(document.createTextNode(''));
 						elem_S.appendChild(document.createTextNode(''));
 					}
-					elem_b.childNodes[0].nodeValue=r.Bn;
-					elem_P.childNodes[0].nodeValue=r.P;
+					elem_b.childNodes[0].nodeValue=r.Bn;		// записываем результат в 
+					elem_P.childNodes[0].nodeValue=r.P;			// текстовые ноды узлов
 					elem_S.childNodes[0].nodeValue=r.S;
 				}
 			}
 
+			/*
+			 * функция для записи результатов расчёта числа Фибоначчи на страницу
+			 * */
 			function WriteResultsFibonacci(){
-				var n = GetValue("fib_steps");
+				var n = GetValue("fib_steps");					// считываем входные параметры
 				if ( isNaN(n) ) {
 					//alert("Input values is not a number!");
 					return;
 				}
-				var elem_fibnumber = document.getElementById("fib_number");
-				var elem_fibresult = document.getElementById("fib_result");
+				var elem_fibnumber = document.getElementById("fib_number"); // находим элементы для 
+				var elem_fibresult = document.getElementById("fib_result"); // вывода результатов
 				if (elem_fibnumber && elem_fibresult) {
-					var r = CalculateFibonacci(1, 1, n);
+					var r = CalculateFibonacci(1, 1, n);					// считаем
 					if (!elem_fibresult.childNodes.length) {
 						elem_fibresult.appendChild(document.createTextNode(''));
 					}
@@ -110,6 +129,9 @@
 				}
 			}
 
+			/*
+			 * функция для записи результатов расчёта быстрой сортировки массива на страницу
+			 * */
 			function WriteResultsQuickSort(){
 				var n = GetValue("array_size");
 				if ( isNaN(n) ) {
@@ -119,16 +141,17 @@
 				var elem_qsarray = document.getElementById("qs_array");
 				var elem_qsresult = document.getElementById("qs_result");
 				if (elem_qsarray && elem_qsresult) {
-					var a = GenRandomArray(n);
-					if (!elem_qsarray.childNodes.length) {
+					var a = GenRandomArray(n);							// генерируем массив заданной длины
+					if (!elem_qsarray.childNodes.length) {				
 						elem_qsarray.appendChild(document.createTextNode(''));
 						elem_qsresult.appendChild(document.createTextNode(''));
 					}
-					elem_qsarray.childNodes[0].nodeValue=a.toString();
-					QuickSort(a, 0, a.length-1);
-					elem_qsresult.childNodes[0].nodeValue=a.toString();
+					elem_qsarray.childNodes[0].nodeValue=a.toString();	// выводим массив на страницу
+					QuickSort(a, 0, a.length-1);						// сортируем массив
+					elem_qsresult.childNodes[0].nodeValue=a.toString();	// выводим сортированный массив
 				}
 			}
+			
 		</script>
 
 		<style type="text/css">
