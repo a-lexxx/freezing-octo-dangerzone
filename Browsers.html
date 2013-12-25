@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset=utf-8>
+		<title>Rating with attribute selectors</title>
+		<style type="text/css">
+			.vcard {
+				display: none;
+			}
+			body {
+				padding: 2em;
+				min-width: 820px;
+			}
+			ul {
+				padding: 0;
+			}
+			li {
+				position: relative;
+				display: inline-block;
+				height: 132px;
+				width: 132px;
+				overflow: hidden;
+			}
+			li:last-child {
+				float: right;
+			}
+			.label {
+				margin: 0 auto;
+				display: inline-block;
+				position:relative ;
+				height: 1em;
+				width: 132px;
+				text-align: center;
+				z-index: -1;
+
+			}
+			img {
+				margin-bottom: 140px;
+			}
+			li > div {				
+				margin-top: -100px;
+			}
+			.chrome span:nth-child(1) {
+				color: green;
+			}
+			.chrome span:nth-child(2) {
+				color: red;
+			}
+			.chrome span:nth-child(3) {
+				color: #EEEE00;
+			}
+			.firefox {
+				color: #FFBB00;
+			}
+			.opera {
+				color: red;
+			}
+			.safari {
+				color: #999;
+			}
+			.yandex:first-letter{
+				color:red;
+			}
+			.ie {
+				margin-top: -0.7em;
+				color: #00AAFF;
+			}
+			h1 
+			{
+				padding-top: 5em;
+				text-align: center;
+			}
+			
+
+		</style>
+	</head>
+	<body>
+		<header>
+			<h1>Browsers list</h1>
+		</header>
+		<section>
+			<ul>
+				<li>
+					<div>
+						<img border="0" alt="" src="Pics/Chrome.png"/>
+					</div>
+					<span class="label chrome"><span>Ch</span><span>ro</span><span>me</span></span>
+				</li>
+				<li>
+					<div>
+						<img border="0" alt="" src="Pics/FireFox.png"/>
+					</div>
+					<span class="label firefox">FireFox</span>	
+				</li>
+				<li>
+					<div>
+						<img border="0" alt="" src="Pics/Opera.png"/>
+					</div>
+					<span class="label opera">Opera</span>	
+				</li>
+				<li>
+					<div>
+						<img border="0" alt="" src="Pics/Safari.png"/>
+					</div>
+					<span class="label safari">Safari</span>	
+				</li>
+				<li>
+					<div>
+						<img border="0" alt="" src="Pics/YaBr.png"/>
+					</div>
+					<span class="label yandex">Yandex</span>	
+				</li>
+				<li>
+					<div>
+						<img border="0" alt="" src="Pics/IE.png"/>
+					</div>
+					<span class="label ie">Internet Explorer</span>	
+				</li>
+			</ul>
+		</section>
+		<footer>
+		    <div class="vcard sign">
+				<span class="title">Автор</span>:
+				<span class="fn nickname">Фурсенко Александр</span>
+				(<span class="email">syngularity@yandex.ua</span>)
+			</div>
+		</footer>
+	</body>
+</html>
