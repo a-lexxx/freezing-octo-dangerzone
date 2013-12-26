@@ -15,7 +15,6 @@
 				padding: 0;
 			}
 			li {
-				position: relative;
 				display: inline-block;
 				height: 132px;
 				width: 132px;
@@ -25,20 +24,15 @@
 				float: right;
 			}
 			.label {
-				margin: 0 auto;
-				display: inline-block;
-				position:relative ;
-				height: 1em;
-				width: 132px;
+				width: inherit;
+				height: inherit;
+				display: table-cell;
+				vertical-align: middle;
 				text-align: center;
-				z-index: -1;
-
 			}
-			img {
-				margin-bottom: 140px;
-			}
-			li > div {				
+			.container {				
 				margin-top: -100px;
+				min-height: 100px;
 			}
 			.chrome span:nth-child(1) {
 				color: green;
@@ -62,12 +56,11 @@
 				color:red;
 			}
 			.ie {
-				margin-top: -0.7em;
 				color: #00AAFF;
 			}
 			h1 
 			{
-				padding-top: 5em;
+				padding-top: 4em;
 				text-align: center;
 			}
 			
@@ -81,40 +74,42 @@
 		<section>
 			<ul>
 				<li>
-					<div>
-						<img border="0" alt="" src="Pics/Chrome.png"/>
+					<div class="container">
+						<img alt="" src="Pics/Chrome.png"/>
 					</div>
-					<span class="label chrome"><span>Ch</span><span>ro</span><span>me</span></span>
+					<div class="label chrome">
+						<span>Ch</span><span>ro</span><span>me</span>
+					</div>
 				</li>
 				<li>
-					<div>
-						<img border="0" alt="" src="Pics/FireFox.png"/>
+					<div class="container">
+						<img alt="" src="Pics/FireFox.png"/>
 					</div>
-					<span class="label firefox">FireFox</span>	
+					<div class="label firefox">FireFox</div>	
 				</li>
 				<li>
-					<div>
-						<img border="0" alt="" src="Pics/Opera.png"/>
+					<div class="container">
+						<img alt="" src="Pics/Opera.png"/>
 					</div>
-					<span class="label opera">Opera</span>	
+					<div class="label opera">Opera</div>	
 				</li>
 				<li>
-					<div>
-						<img border="0" alt="" src="Pics/Safari.png"/>
+					<div class="container">
+						<img alt="" src="Pics/Safari.png"/>
 					</div>
-					<span class="label safari">Safari</span>	
+					<div class="label safari">Safari</div>	
 				</li>
 				<li>
-					<div>
-						<img border="0" alt="" src="Pics/YaBr.png"/>
+					<div class="container">
+						<img alt="" src="Pics/YaBr.png"/>
 					</div>
-					<span class="label yandex">Yandex</span>	
+					<div class="label yandex">Yandex</div>	
 				</li>
 				<li>
-					<div>
-						<img border="0" alt="" src="Pics/IE.png"/>
+					<div class="container">
+						<img alt="" src="Pics/IE.png"/>
 					</div>
-					<span class="label ie">Internet<br>Explorer</span>	
+					<div class="label ie">Internet<br>Explorer</div>	
 				</li>
 			</ul>
 		</section>
