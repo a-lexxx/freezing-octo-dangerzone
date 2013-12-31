@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset=utf-8>
+		<title>Rating with attribute selectors</title>
+		
+		<script type="text/javascript">
+
+		(function() {
+
+			
+			var vowelsString 	 = "уеыаоэяиюё";
+			var consonantsString = "бвгджзйклмнпрстфхцчшщьъ";
+			var isVowels 	 = makeHash(vowelsString+vowelsString.toLocaleUpperCase());
+			var isConsonants = makeHash(consonantsString+consonantsString.toLocaleUpperCase());
+			var wordRegExp 	 = new RegExp( "[" + vowelsString + consonantsString + "A-Za-z0-9_]+", "gi")
+			var wordsBorders = [ 
+					new RegExp( "[^" + vowelsString + consonantsString + "A-Za-z0-9_]", "gi"), 	// [^бвгджзйклмнпрстфхцчшщьъуеыаоэяиюёA-Za-z0-9_]/gi,
+					wordRegExp,	// [бвгджзйклмнпрстфхцчшщьъуеыаоэяиюёA-Za-z0-9_]+/gi
+				];
+			// var wordsRussianBorders = [ 
+			// 		new RegExp( "[^" + vowelsString + consonantsString + "]", "gi"), 	// [^бвгджзйклмнпрстфхцчшщьъуеыаоэяиюё]/gi,
+			// 		new RegExp( "[" + vowelsString + consonantsString + "]", "gi"),	// [бвгджзйклмнпрстфхцчшщьъуеыаоэяиюё]+/gi
+			// 	];
+
+			function makeHash(str) {
+				var r = {};
+				for (var i = 0; i < str.length; i++) {
+					r[ str[i] ] = 1;
+				};
+				return r;
+			}
+
+			/* функция для 
+			 * 
+			 * */
+			function getUniqElements() {
+				if ( this && this.length !== undefined ) {
+					var r = {};
+					for (var i = 0; i < this.length; i++) {
+						r[ this[i] ] = 1;
+					};
+					return Object.keys(r);
+				}
+				return this;
+			}
+
+			/* функция для 
+			 * 
+			 * */
+			function getUniqSymbols(str, hash) {		// гласные
+				if (str && typeof str !== "string" && typeof str.toString === "function") 
+					str = str.toString();
+				if (hash && hash instanceof Object && typeof str === "string") { 
+					str = str.toLocaleLowerCase();
+					var r = {};
+					for (var i = 0; i < str.length; i++) {
+						if (hash[ str[i] ]) {
+							r[ str[i] ] = 1;
+						}
+					}
+					return Object.keys(r);
+				};
+				return [];
+			}
+
+			
+
+			/* this function is used for splitting array of strings on array of strings
+			 * it have to be as faster is it can, so there is no any check
+			 * be careful with it
+			 * */
+			function cutString(str, regexp) {
+				if ( str instanceof Array) {
+					for (var i = 0; i < str.length; i++) {
+						str[i] = cutString(str[i], regexp);
+					}
+					return str;
+				}
+				var r = [];
+				
+					if ( str.length > 1) {
+						var tail = str;
+						var ri = 0;
+						var start;
+						do  {
+							if (tail.length==1) {
+								start="";
+								break;
+							}
+							start = tail[0];
+							tail = tail.slice(1);
+							var pos = tail.search(regexp[ri]);
+							if (pos > -1 && pos < tail.length) {
+								r.push(start.concat(tail.substring(0, pos)));
+								tail = tail.substr(pos);
+							}
+							ri = (ri+1)%regexp.length;
+						} while ( (pos > -1) );
+						if (tail.length > 0)
+							r.push( start.concat(tail) );
+					} else
+						r.push( str );
+				
+				return r;
+			}
+
+
+			function splitParts(str) {
+				//if (! str instanceof Array) str = [ str ];
+				return cutString( str, wordsBorders);
+			}
+
+			function splitWords(str) {
+				var ar = splitParts(str);
+				var r = [];
+				for (var i=0; i < ar.length; i++ ) {
+					if ( ar[i].search(wordRegExp) >= 0 )
+						r.push(ar[i]);
+				}
+				return r;
+			}
+
+			function joinParts(splittedStr, sylDelim, wordsDelim ) {
+				if (! wordsDelim) wordsDelim="";
+				var r = wordsDelim[1] ? wordsDelim[1] : "";
+				if (splittedStr instanceof Array) {
+					for (var i = 0; i < splittedStr.length; i++) {
+						r += joinParts(splittedStr[i], "", sylDelim);
+						if (wordsDelim[0] && i < splittedStr.length-1)
+							r += wordsDelim[0];
+					};
+					if (wordsDelim[2]) r+= wordsDelim[2];
+					return r;
+				}
+				return splittedStr;
+			}
+
+
+			/* Function for debug purposes 
+			 * Output with nice ^_^ syntax
+			 * */
+			function printStrings(splittedStr) {
+				console.log( joinParts(splittedStr, "-",  ",[]") );
+			}
+
+
+			function splitSyllables(str) {
+				if (str && typeof str !== "string" && typeof str.toString === "function") 
+					str = str.toString();
+				if (typeof str === "string") {
+					var words = splitParts(str);
+					//printStrings(words);
+					for (var i = 0; i < words.length; i++ ) {
+						var word = words[i];
+						var scount = 0;
+						var sys = [];		// syllables
+						var pres = 0;
+						for (var j = 0; j < word.length; j++) {
+							if ( isVowels[ word[j] ] ) {
+								if (scount) {
+									sys.push(word.substring(pres, j));
+									pres = j;
+								}
+								scount++;
+							}
+						};												// в слове столько слогов сколько гласных
+						sys.push(word.substring(pres, word.length));
+						for (var j = 0; j < sys.length-1; j++) {
+							var c = 0;								// согласные
+							var w = 0;
+							for (var k = 0; k < sys[j].length; k++) {
+								if ( isVowels[ sys[j][k] ] ) w++;
+								else {
+									if (w && c>0) {
+										sys[j+1] = sys[j].substr(k).concat(sys[j+1]);
+										sys[j] = sys[j].substr(0,k);
+										break;
+									}
+									c++;
+								}
+							}
+						};
+						for (var j = 0; j < sys.length; j++) {
+							var w = (isVowels[ sys[j][0] ]) ? 1 : 0;		// гласные: была ли в слоге гласная
+							for (var k = 1; k < sys[j].length; k++) {
+								if (isVowels[ sys[j][k] ]) w++;			
+								if (sys[j][k-1] == sys[j][k]) { 	// две одинаковые буквы разбиваются,
+									if ( (w===0 && j>0 ) ) {		// если перед гласной, то в предыдущий слог
+										sys[j-1] = sys[j-1].concat(sys[j].substr(0,k));
+										sys[j] = sys[j].substr(k);
+									} else if (w>0 && j<sys.length-1) {	// если после гласной, то в последующий слог
+										sys[j+1] = sys[j].substr(k).concat(sys[j+1]);
+										sys[j] = sys[j].substr(0,k);
+									}
+								}
+							};
+						};
+						words[i] = sys;
+					}
+					//printStrings(words);
+					return words;
+				}
+			}
+			
+			// here we are extending String class
+
+			String.prototype.getVowels 		= function() { 
+				return getUniqSymbols(this, isVowels); 		// гласные
+			};
+			String.prototype.getConsonants 	= function() {
+				return getUniqSymbols(this, isConsonants); 	// согласные
+			};
+			String.prototype.getWords 		= function() { 
+				var r = splitWords(this);
+				r.formatStringFromParts = function( wordDelim ) {
+					return joinParts(this, "", wordDelim);
+				}
+				r.uniq = getUniqElements;
+				return r;	
+			};
+			String.prototype.getWordsCount 	= function() { 
+				return splitWords(this).length; 		
+			};
+			String.prototype.getParts 	= function() { 
+				var r = splitParts(this);
+				r.formatStringFromParts = function( wordDelim ) {
+					return joinParts(this, "", wordDelim);
+				}
+				r.uniq = getUniqElements;
+				return r;
+			};
+			String.prototype.getSyllables 	= function() {
+				this._syllables = splitSyllables(this);		// we can implement "cashing everything" feature to make things faster
+				this._syllables.formatStringFromParts = function( sylDelim, wordDelim) {
+					return joinParts(this, sylDelim, wordDelim);
+				}
+				this._syllables.uniq = getUniqElements;
+				return this._syllables;
+			};
+			String.formatStringFromParts = joinParts;		// static class methods
+			
+		}() );
+
+			/*
+			* * * * * * * всякие вспомогательные функции * * * * * * * * 
+			*/
+			
+			function setValue(id, value) {
+				var elem;
+				if (id instanceof HTMLElement) 
+					elem = id;
+				else 
+				 	elem = document.getElementById(id);				// находим элементы для вывода результатов
+
+				if (elem) {
+					if (!elem.childNodes.length) {
+						elem.appendChild(document.createTextNode(''));	// добавляем текстовые ноды
+					}
+					elem.childNodes[0].nodeValue = value;				// записываем результат в текстовые ноды узлов
+				}
+			}
+
+			function getValue(id, defVal) {
+				elem = document.getElementById(id);	
+				var r = defVal;
+				if (elem) {
+					if (elem.type === "checkbox" || elem.type === "radio")
+						r = elem.checked;
+					else
+						r = elem.value;					
+				}
+				return r;
+			}
+
+			function fillList(id, values) {
+				var elem = document.getElementById(id);				// находим элементы для вывода результатов
+				if (elem) {
+					for (var i = 0; i < values.length; i++) {
+						if (!elem.children[i]) {
+							elem.appendChild(document.createElement("li"));
+						}
+						setValue(elem.children[i], values[i]);
+					};
+					while (elem.children.length > values.length)
+						elem.removeChild(elem.lastElementChild);
+					
+				}
+			}
+
+			/*
+			 * функция для записи результатов 
+			 * */
+			function updatePage(){
+				
+				var input = document.getElementById("input_text");	// находим элементы для 
+				var text_output = document.getElementById("output_text");	// вывода результатов
+				if (input && text_output) {
+					var str = input.value;
+					var words = str.getWords();						// есть и функция getWordsCount, но тут это лишний вызов
+					var vowels = str.getVowels();
+					var consonants = str.getConsonants();
+					var delim = getValue("syl_delim","");
+					text_output.value = str.getSyllables().formatStringFromParts(delim);
+					setValue("words_count", words.length);
+					if (getValue("words_sorted")) 
+						words = words.sort();
+					if (getValue("words_uniq")) 
+						words = words.uniq();
+					fillList("words_list", words);
+					setValue("vowels_count", vowels.length);
+					fillList("vowels_list", vowels.sort());
+					setValue("consonants_count", consonants.length);
+					fillList("consonants_list", consonants.sort());
+				}
+			}
+
+			
+			
+		</script>
+
+		<style type="text/css">
+			.vcard {
+				display: none;
+			}
+			body {
+				font-size: 12pt;
+				min-width: 800px;
+				padding: 1em;
+			}
+
+			.columns {
+				margin-top: 1em;
+			}
+			.column {
+				display: table-cell;
+				padding: 0.5em;
+				border: 1px solid #AAA;
+				min-width: 200px;
+				vertical-align: top;
+				border-left: none;
+			}
+			.column:first-child {
+				border-left: 1px solid #AAA;
+			}
+			.inputValues {
+				padding-bottom: 1em;
+			}
+
+			#input_text {
+				border-radius: 5px;
+				border: 3px solid #464;
+				background-color: #EFE;
+				margin: 3px;
+				outline: none;
+			}
+
+			#input_text:focus {
+				border-radius: 1px;
+				border: 5px solid #6A6;
+				margin: 1px;
+			}
+
+			#input_text, #output_text {
+				min-height: 3em;
+				max-height: 10em;
+				min-width: 70%;
+				max-width: 90%;
+			}
+
+			#syl_delim {
+				width: 3em;
+			}
+			
+			.note {
+				display: none;
+				position: absolute;
+				z-index: 1;
+				width: 40em;
+				left: 105%;				/* this doesn't work in IE, even in 11 */
+				font-size: smaller;
+				border-radius: 3px;
+				padding: 2px 1em;
+				box-shadow: 3px 3px 9px #AAA;
+				color: #888;
+				background-color: white;
+			}
+
+			.note:before {
+				content: "<<< ";
+				padding-right: 1em;
+			}
+
+			.input_line:hover .note {
+				display: inline;
+			}
+
+			.input_line {
+				position: relative;
+			}
+
+		</style>
+	</head>
+	<body>
+		<header>
+			<h1>JS coding laboratory: functions and closures</h1>
+		</header>
+		<section >
+			<h2>Extended String library</h2>
+			<div class="inputValues">
+	        	<label for="input_text">Введите текст </label><br>
+				<textarea id="input_text" placeholder="Введите текст" autofocus="autofocus"
+				 onchange="updatePage()" onkeyup="updatePage()"
+				 	>Привет! Это небольшой тестовый текст. Разбивка на слоги ещё слабая.</textarea><br>
+
+				<span class="input_line">
+				<input id="words_sorted" type="checkbox" onchange="updatePage()"/>
+					<label for="words_sorted">Сортировать слова</label>
+					<span class="note">Применение: "некоторая_строка".getWords().sort();</span><br>
+				</span>
+				<span class="input_line">
+				<input id="words_uniq" type="checkbox" onchange="updatePage()"/>
+					<label for="words_uniq">Только уникальные слова</label>
+					<span class="note">Применение: "некоторая_строка".getWords().uniq();</span><br>
+				</span>
+				<span class="input_line">
+				<label for="syl_delim" title="Попробуйте варианты: '-[]' или '||'">Разделитель слогов: </label>
+					<input id="syl_delim" type="text" maxlength="3" onchange="updatePage()" onkeyup="updatePage()" value="-"/>
+					<span class="note">Напрмер, '-[]' или '||'. <br> Применение: "некоторая_строка".getSyllables().formatStringFromParts( разделитель );</span><br>
+				</span>
+			</div>
+			<!-- <input type="button" value="Обновить" onclick="updatePage()"> -->
+			<div class="outputValues">
+				<h3>Результат</h3>
+				<textarea id="output_text" placeholder="Введите текст в поле выше" readonly="readonly"></textarea>
+				<div class="columns">
+					<div class="column">
+						<span>Слов в тексте: <span id="words_count"></span></span>
+						<ul id="words_list"></ul>
+					</div>
+					<div class="column">
+						<span>Гласных: <span id="vowels_count"></span></span>
+						<ul id="vowels_list"></ul>
+					</div>
+					<div class="column">
+						<span>Согласных: <span id="consonants_count"></span></span>
+						<ul id="consonants_list"></ul>
+					</div>
+				</div>
+			</div>				
+		</section>
+
+		
+		<footer>
+		    <div class="vcard sign">
+				<span class="title">Автор</span>:
+				<span class="fn nickname">Фурсенко Александр</span>
+				(<span class="email">syngularity@yandex.ua</span>)
+			</div>
+		</footer>
+	</body>
+</html>
