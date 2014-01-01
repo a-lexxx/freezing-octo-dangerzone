@@ -203,7 +203,7 @@
 				}
 			}
 			
-			// here we are extending String class
+			// here we are extending String class 
 
 			String.prototype.getVowels 		= function() { 
 				return getUniqSymbols(this, isVowels); 		// гласные
@@ -293,20 +293,20 @@
 			 * */
 			function updatePage(){
 				
-				var input = document.getElementById("input_text");	// находим элементы для 
-				var text_output = document.getElementById("output_text");	// вывода результатов
+				var input = document.getElementById("input_text");	
+				var text_output = document.getElementById("output_text");
 				if (input && text_output) {
 					var str = input.value;
-					var words = str.getWords();						// есть и функция getWordsCount, но тут это лишний вызов
+					var words = str.getWords();						
 					var vowels = str.getVowels();
 					var consonants = str.getConsonants();
 					var delim = getValue("syl_delim","");
 					text_output.value = str.getSyllables().formatStringFromParts(delim);
-					setValue("words_count", words.length);
 					if (getValue("words_sorted")) 
 						words = words.sort();
 					if (getValue("words_uniq")) 
 						words = words.uniq();
+					setValue("words_count", words.length);
 					fillList("words_list", words);
 					setValue("vowels_count", vowels.length);
 					fillList("vowels_list", vowels.sort());
@@ -315,7 +315,11 @@
 				}
 			}
 
-			
+			window.onload = function() {
+				document.getElementById('example_function').innerHTML = 
+				"<h4>Пример использования</h4>" +
+				"<pre>" + updatePage.toString() + "</pre>";
+			}
 			
 		</script>
 
@@ -377,7 +381,8 @@
 				position: absolute;
 				z-index: 1;
 				width: 40em;
-				left: 105%;				/* this doesn't work in IE, even in 11 */
+				margin-left: 105%;
+				left: 0;
 				font-size: smaller;
 				border-radius: 3px;
 				padding: 2px 1em;
@@ -399,6 +404,45 @@
 				position: relative;
 			}
 
+			input.spoiler {
+				display: none;
+			}
+
+			label.spoiler {
+				border-bottom: 1px dotted #999;
+			}
+
+			label.spoiler:before {
+				display: inline-block;
+				content: "+";
+				color: green;
+				background-color: #DDD;
+				border: 1px #333 solid;
+				width: 0.9em;
+				text-align: center;
+				margin-right: 0.5em;
+			}
+
+			label.spoiler:hover {
+				border-bottom: 1px dashed #333;
+			}
+
+			.spoiler_main_text {
+				display: none;
+			}
+
+			input.spoiler:checked ~ label.spoiler:before {
+				content: "-";
+			}
+
+			input.spoiler:checked ~ .spoiler_main_text {
+				display: block;
+			}
+
+			#example_function pre {
+				font-size: 8pt;
+			}
+
 		</style>
 	</head>
 	<body>
@@ -407,11 +451,66 @@
 		</header>
 		<section >
 			<h2>Extended String library</h2>
-			<div class="inputValues">
-	        	<label for="input_text">Введите текст </label><br>
-				<textarea id="input_text" placeholder="Введите текст" autofocus="autofocus"
+			<section class="info">
+				<input id="spoiler_01" class="spoiler" type="checkbox"/>
+				<label for="spoiler_01" class="spoiler">Библиотека расширяет функционал класса String методами getWords(), getWordsCount(), getSyllables, и т.д.</label>
+				<div id="main_info" class="spoiler_main_text">
+					<section>
+						<h3>Описание библиотеки</h3>
+						Подключённая библиотека автоматически расширяет класс String, дополняя его набором методов.
+						В результате, все представители класса String получают набор дополнительных функций.
+					</section>
+					<section>
+						<h3>Набор функций библиотеки</h3>
+						<dl>
+							<dt>getVowels</dt>
+								<dd>Функция возвращает массив гласных букв текста<br>
+									<span class="example">"ПРИвет".getVowels() => ["и", "е"]</span>
+								</dd>
+							<dt>getConsonants</dt>
+								<dd>Функция возвращает массив согласных букв текста<br>
+									<span class="example">"ПРИвет".getConsonants() => ["п", "р", "в", "т"]</span>
+								</dd>
+							<dt>getWords</dt>
+								<dd>Функция возвращает массив слов текста<br>
+									<span class="example">"ПРИвет, мир!".getWords() => ["ПРИвет", "мир"]</span>
+								</dd>
+							<dt>getWordsCount</dt>
+								<dd>Функция возвращает количество слов текста<br>
+									<span class="example">"ПРИвет, мир!".getWordsCount() === "ПРИвет, мир!".getWords().length</span>
+								</dd>
+							<dt>getParts</dt>
+								<dd>Функция возвращает массив элементов текста: слова и разделительные элементы<br>
+									<span class="example">"ПРИвет, мир!".getParts() => ["Привет", ", ", "мир", "!"]</span>
+								</dd>
+							<dt>getSyllables</dt>
+								<dd>Функция возвращает массив элементов текста, в котором каждый элемент -- массив слогов данного слова.
+									Элементы, не являющиеся словами, состоят из одного элемента массива<br>
+									<span class="example">"ПРИвет, мир!".getSyllables() => [ ["При", "вет"], "[, ]", "[мир]", "[!]"]</span>
+								</dd>
+							<h4>Объекты, возвращаемые функциями getWords, getParts, getSyllables содержат два дополнительных метода:</h4>
+							<dt>uniq</dt>
+								<dd>Метод для получения только уникальных элементов массива<br>
+									<span class="example">
+										"мир, мир!".getWords() => [ "мир", "мир" ]<br>
+										"мир, мир!".getWords().uniq() => [ "мир" ]
+									</span>
+								</dd>
+							<dt>formatStringFromParts</dt>
+								<dd>Метод для получения строки из массива элементов строки<br>
+								Функция возвращает строку, объединяющую элементы массива, используя указанные разделители.<br>
+								<span class="example">"ПРИвет, мир!".getSyllables().formatStringFromParts("-{}") => "{ПРИ-вет}{, }{мир}{!}"</span>
+								</dd>
+							<span class="example" id="example_function"></span>
+						</dl>
+					</section>
+				</div>
+			</section>
+			<section class="inputValues">
+	        	<h3>Введите текст </h3>
+				<textarea id="input_text" placeholder="Введите текст на русском языке" autofocus="autofocus"
 				 onchange="updatePage()" onkeyup="updatePage()"
-				 	>Привет! Это небольшой тестовый текст. Разбивка на слоги ещё слабая.</textarea><br>
+				 	></textarea><!--Привет! Это небольшой тестовый текст. Разбивка на слоги ещё слабая.--><br>
 
 				<span class="input_line">
 				<input id="words_sorted" type="checkbox" onchange="updatePage()"/>
@@ -428,9 +527,9 @@
 					<input id="syl_delim" type="text" maxlength="3" onchange="updatePage()" onkeyup="updatePage()" value="-"/>
 					<span class="note">Напрмер, '-[]' или '||'. <br> Применение: "некоторая_строка".getSyllables().formatStringFromParts( разделитель );</span><br>
 				</span>
-			</div>
+			</section>
 			<!-- <input type="button" value="Обновить" onclick="updatePage()"> -->
-			<div class="outputValues">
+			<section class="outputValues">
 				<h3>Результат</h3>
 				<textarea id="output_text" placeholder="Введите текст в поле выше" readonly="readonly"></textarea>
 				<div class="columns">
@@ -447,7 +546,7 @@
 						<ul id="consonants_list"></ul>
 					</div>
 				</div>
-			</div>				
+			</section>				
 		</section>
 
 		
