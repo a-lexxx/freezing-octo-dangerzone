@@ -291,8 +291,18 @@
 			/*
 			 * функция для записи результатов 
 			 * */
-			function updatePage(){
-				
+			function updatePage() {
+
+				function filler(id, idx, ar) {
+					setValue(id+"_count", collection[id].length);
+					fillList(id+"_list", collection[id]);
+				}
+				var collection;
+				var str;
+				var words; 
+				var vowels;
+				var consonants;
+				var delim;
 				var input = document.getElementById("input_text");	
 				var text_output = document.getElementById("output_text");
 				if (input && text_output) {
@@ -306,20 +316,26 @@
 						words = words.sort();
 					if (getValue("words_uniq")) 
 						words = words.uniq();
-					setValue("words_count", words.length);
-					fillList("words_list", words);
-					setValue("vowels_count", vowels.length);
-					fillList("vowels_list", vowels.sort());
-					setValue("consonants_count", consonants.length);
-					fillList("consonants_list", consonants.sort());
+
+					collection = { 
+						'words':words, 
+						'vowels':vowels.sort(),
+						'consonants':consonants.sort()
+					};
+					console.time("test");
+					Object.keys(collection).forEach(filler);
+					console.timeEnd("test");
 				}
 			}
 
-			window.onload = function() {
+			function showExample() {
 				document.getElementById('example_function').innerHTML = 
 				"<h4>Пример использования</h4>" +
 				"<pre>" + updatePage.toString() + "</pre>";
 			}
+
+			if (window.addEventListener) window.addEventListener("load", showExample, false);
+			if (window.attachEvent) window.attachEvent("onload", showExample);
 			
 		</script>
 
