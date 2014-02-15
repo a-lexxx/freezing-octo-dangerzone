@@ -10,39 +10,39 @@ form {
 }
 
 
-.progress, .progress:before {
+.progress {
+	width: 210px;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.29) inset;
+	overflow: hidden;
+	position: relative;
+}
+
+.progress, .progress div {
 	border-radius: 6px;
 	height: 13px;
 }
 
-.progress {
-	width: 210px;
-	position: relative;
-	box-shadow: 0 1px 3px rgba(0,0,0,0.29) inset;
-	overflow: hidden;
-	text-align: center;
-}
-
-.progress:before {
-	content: '';
-	display: block;
-	position: absolute;
+.progress div {
 	background: linear-gradient(to top, 
 		#28bf14 0%, 
 		#8bda1a 14%,
 		#28bf14 49%,
 		#abff58 100%);
-	width: 34%;
-	height: inherit;
 	transition: width 1s linear 0s;
 }
 
-.progress::after {
-	content: '34%';
-	margin-top: 1px;
+.progress div::after {
+	content: attr(style);
 	font: 7pt Verdana ;
+	top: -2.2em;
+	left: calc(50% - 1.9em);
+	position: absolute;
 	display: block;
-	position: relative;
+	line-height: 2em;
+	width: 3.8em;		/* а теперь кусок правил нужных только для того ...*/
+	direction: rtl;		/*  чтобы в современном браузере IE скрыть символ ";" */
+	clip: rect(auto, auto, auto, 0.5em);  /* который он дописывает автоматически */
+	text-align: left;
 }
 
 
@@ -109,17 +109,35 @@ form {
 	display: none;
 }
 
-
 	</style>
+
+	<script type="text/javascript">
+		var state = 100;
+		var dir = -10;
+		function onClick() {
+			state += dir;
+			if (state <= 0) {
+				state = 0;
+				dir = -dir;
+			}
+			if (state >= 100) {
+				state = 100;
+				dir = -dir;
+			}
+			document.querySelector('.progress div').setAttribute('style', 
+				'width: ' + state + '%;');
+		}
+	</script>
+
   </head>
   <body>
 	<header>
 		 <h1>CSS: progress bar &amp; button</h1>
 	</header>
 	<form>
-		
-		<div class='progress'></div>
-		<a tabindex="1" class='button'></a>
+		<!-- чтобы всё отображалось и в IE нужно чтобы в конце строки была ";" -->
+		<div class='progress'><div style='width: 100%;'></div></div>
+		<a tabindex="1" class='button' onclick="onClick();"></a>
 	</form>
 	<footer>
 		<div class="vcard sign">
