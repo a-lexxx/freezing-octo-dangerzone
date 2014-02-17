@@ -12,7 +12,7 @@ form {
 
 .progress {
 	width: 210px;
-	box-shadow: 0 1px 3px rgba(0,0,0,0.29) inset;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.29) inset;
 	overflow: hidden;
 	position: relative;
 }
@@ -74,8 +74,7 @@ form {
 	content:"Кнопка";
 	font: 8pt Verdana ;
 	position: relative;
-	display: block;
-	margin-top: 3px;
+	top: -1px;
 	text-shadow: 0 1px 0 rgba(255,255,255,0.75);
 }
 
@@ -115,6 +114,8 @@ form {
 		var state = 100;
 		var dir = -10;
 		function onClick() {
+			if (window.event)
+				window.event.preventDefault();
 			state += dir;
 			if (state <= 0) {
 				state = 0;
@@ -137,7 +138,7 @@ form {
 	<form>
 		<!-- чтобы всё отображалось и в IE нужно чтобы в конце строки была ";" -->
 		<div class='progress'><div style='width: 100%;'></div></div>
-		<a tabindex="1" class='button' onclick="onClick();"></a>
+		<button class='button'></button>
 	</form>
 	<footer>
 		<div class="vcard sign">
